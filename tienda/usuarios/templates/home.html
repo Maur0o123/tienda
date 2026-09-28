@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}CodeStore | Código listo para usar{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+    <div class="container hero-inner">
+        <div class="hero-text">
+            <span class="tag">Nuevo · Plantillas y scripts</span>
+            <h1>Código limpio,<br><span class="gradient">listo para usar.</span></h1>
+            <p>Scripts, plantillas y componentes para acelerar tus proyectos. Compra una vez, úsalo siempre.</p>
+            <div class="hero-buttons">
+                <a href="#" class="btn btn-primary btn-lg">Ver productos</a>
+                <a href="#destacados" class="btn btn-ghost btn-lg">Destacados</a>
+            </div>
+        </div>
+
+        <div class="code-window">
+            <div class="code-bar"><i></i><i></i><i></i></div>
+<pre><code><span class="c"># tu próximo proyecto</span>
+<span class="k">from</span> codestore <span class="k">import</span> producto
+
+app = producto.<span class="f">instalar</span>(<span class="s">"auth-django"</span>)
+app.<span class="f">ejecutar</span>()
+
+<span class="c"># listo en minutos ✨</span></code></pre>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container grid-3">
+        <div class="card">
+            <div class="icon">⚡</div>
+            <h3>Entrega inmediata</h3>
+            <p>Descarga tu código apenas completes la compra.</p>
+        </div>
+        <div class="card">
+            <div class="icon">🛡️</div>
+            <h3>Código revisado</h3>
+            <p>Cada producto es probado y documentado.</p>
+        </div>
+        <div class="card">
+            <div class="icon">♾️</div>
+            <h3>Actualizaciones</h3>
+            <p>Recibe mejoras y correcciones sin costo extra.</p>
+        </div>
+    </div>
+</section>
+
+<section class="section" id="categorias">
+    <div class="container">
+        <h2 class="section-title">Explora por <span class="gradient">categoría</span></h2>
+        <div class="grid-4">
+            <a href="#" class="category">🐍 <span>Python</span></a>
+            <a href="#" class="category">🌐 <span>Web</span></a>
+            <a href="#" class="category">🤖 <span>Bots</span></a>
+            <a href="#" class="category">🎨 <span>Plantillas UI</span></a>
+        </div>
+    </div>
+</section>
+
+<section class="section" id="destacados">
+    <div class="container">
+        <h2 class="section-title">Productos <span class="gradient">destacados</span></h2>
+        <div class="grid-3">
+            <article class="product">
+                <div class="thumb">&lt;/&gt;</div>
+                <h3>Sistema de login</h3>
+                <p>Autenticación completa lista para Django.</p>
+                <div class="product-footer">
+                    <strong>$19.990</strong>
+                    <a href="#" class="btn btn-primary">Agregar</a>
+                </div>
+            </article>
+            <article class="product">
+                <div class="thumb">{ }</div>
+                <h3>Dashboard admin</h3>
+                <p>Panel moderno y responsivo con gráficos.</p>
+                <div class="product-footer">
+                    <strong>$29.990</strong>
+                    <a href="#" class="btn btn-primary">Agregar</a>
+                </div>
+            </article>
+            <article class="product">
+                <div class="thumb">&gt;_</div>
+                <h3>Bot de Discord</h3>
+                <p>Base modular con comandos y moderación.</p>
+                <div class="product-footer">
+                    <strong>$14.990</strong>
+                    <a href="#" class="btn btn-primary">Agregar</a>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container cta">
+        <h2>¿Listo para empezar?</h2>
+        <p>Crea tu cuenta gratis y descubre todo el catálogo.</p>
+        {% if not user.is_authenticated %}
+            <a href="{% url 'register' %}" class="btn btn-light btn-lg">Crear cuenta</a>
+        {% else %}
+            <a href="#" class="btn btn-light btn-lg">Ver catálogo</a>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CodeStore{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'usuarios/css/style.css' %}">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="container nav-inner">
+        <a href="{% url 'home' %}" class="logo">&lt;/&gt; Code<span>Store</span></a>
+
+        <nav class="nav-links">
+            <a href="{% url 'home' %}">Inicio</a>
+            <a href="#">Productos</a>
+            <a href="#categorias">Categorías</a>
+            <a href="#">Ofertas</a>
+            <a href="#">Contacto</a>
+        </nav>
+
+        <form class="search" action="#" method="get">
+            <input type="search" name="q" placeholder="Buscar código, plantillas...">
+        </form>
+
+        <div class="nav-actions">
+            <a href="#" class="cart" aria-label="Carrito">🛒<span class="badge">0</span></a>
+
+            {% if user.is_authenticated %}
+                <span class="user">{{ user.username }}</span>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-ghost">Salir</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-ghost">Iniciar sesión</a>
+                <a href="{% url 'register' %}" class="btn btn-primary">Registrarse</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+    <div class="container footer-inner">
+        <a href="{% url 'home' %}" class="logo">&lt;/&gt; Code<span>Store</span></a>
+        <p>© 2026 CodeStore. Hecho con Django.</p>
+        <div class="footer-links">
+            <a href="#">Términos</a>
+            <a href="#">Privacidad</a>
+            <a href="#">Contacto</a>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
