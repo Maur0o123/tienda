@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Mi perfil | CodeStore{% endblock %}
+
+{% block content %}
+<section class="auth">
+    <div class="auth-card">
+        <div class="profile-head">
+            <div class="avatar">{{ user.username|first|upper }}</div>
+            <div>
+                <h1>Mi <span class="gradient">perfil</span></h1>
+                <p class="auth-sub">Miembro desde {{ user.date_joined|date:"d/m/Y" }}</p>
+            </div>
+        </div>
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="alert">
+                    {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+
+            {% for field in form %}
+                <div class="field">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <div class="help">{{ field.help_text|safe }}</div>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <small class="error">{{ error }}</small>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Guardar cambios</button>
+        </form>
+
+        <p class="auth-alt"><a href="{% url 'password_change' %}">Cambiar contraseña</a></p>
+    </div>
+</section>
+{% endblock %}

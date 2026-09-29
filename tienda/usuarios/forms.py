@@ -22,3 +22,21 @@ class RegistroForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+class PerfilForm(forms.ModelForm):
+    email = forms.EmailField(required=True, label='Correo electrónico')
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email')
+        labels = {
+            'username': 'Nombre de usuario',
+            'first_name': 'Nombre',
+            'last_name': 'Apellido',
+        }
+
+    def clean_email(self):
+        email = self.cleaned_data['email'].lower()
+        if User.objects.filter(email__iexact=email).exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError('Este correo ya está en uso.')
+        return email

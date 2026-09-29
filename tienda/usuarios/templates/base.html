@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}CodeStore{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'usuarios/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'usuarios/css/style.css' %}?v=2">
 </head>
 <body>
 
@@ -29,7 +29,7 @@
             <a href="#" class="cart" aria-label="Carrito">🛒<span class="badge">0</span></a>
 
             {% if user.is_authenticated %}
-                <span class="user">{{ user.username }}</span>
+                <a href="{% url 'perfil' %}" class="user">{{ user.username }}</a>
                 <form method="post" action="{% url 'logout' %}">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-ghost">Salir</button>
@@ -57,6 +57,32 @@
         </div>
     </div>
 </footer>
+
+{% if messages %}
+    <div class="toast-container">
+        {% for message in messages %}
+            <div class="toast {{ message.tags }}" role="alert">
+                <span class="toast-icon">
+                    {% if message.tags == 'success' %}✓{% elif message.tags == 'error' %}!{% else %}i{% endif %}
+                </span>
+                <p>{{ message }}</p>
+                <button type="button" class="toast-close" aria-label="Cerrar">&times;</button>
+                <span class="toast-progress"></span>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<script>
+    document.querySelectorAll('.toast').forEach(function (toast) {
+        function cerrar() {
+            toast.classList.add('hide');
+            setTimeout(function () { toast.remove(); }, 300);
+        }
+        toast.querySelector('.toast-close').addEventListener('click', cerrar);
+        setTimeout(cerrar, 4000);
+    });
+</script>
 
 </body>
 </html>
