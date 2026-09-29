@@ -7,6 +7,7 @@ from django.contrib.auth.views import PasswordChangeView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from .forms import RegistroForm, PerfilForm
+from productos.models import Producto
 
 
 def register(request):
@@ -26,7 +27,8 @@ def register(request):
 
 
 def home(request):
-    return render(request, 'home.html')
+    destacados = Producto.objects.filter(activo=True)[:3]
+    return render(request, 'home.html', {'destacados': destacados})
 
 @login_required
 def perfil(request):

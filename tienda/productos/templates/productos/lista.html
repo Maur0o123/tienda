@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Administración | CodeStore{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <div class="container">
+        <div class="panel-head">
+            <h1>Panel de <span class="gradient">administración</span></h1>
+            <a href="{% url 'producto_crear' %}" class="btn btn-primary">+ Nuevo producto</a>
+        </div>
+
+        <div class="table-wrap">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Categoría</th>
+                        <th>Precio</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in productos %}
+                        <tr>
+                            <td>{{ p.nombre }}</td>
+                            <td>{{ p.get_categoria_display }}</td>
+                            <td>${{ p.precio|floatformat:"0g" }}</td>
+                            <td>
+                                {% if p.activo %}
+                                    <span class="pill on">Publicado</span>
+                                {% else %}
+                                    <span class="pill off">Oculto</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="actions">
+                                    <a href="{% url 'producto_editar' p.pk %}" class="btn btn-ghost btn-sm">Editar</a>
+                                    <a href="{% url 'producto_eliminar' p.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="empty-row">Aún no hay productos. Crea el primero.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

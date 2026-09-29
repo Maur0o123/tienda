@@ -65,33 +65,19 @@ app.<span class="f">ejecutar</span>()
     <div class="container">
         <h2 class="section-title">Productos <span class="gradient">destacados</span></h2>
         <div class="grid-3">
-            <article class="product">
-                <div class="thumb">&lt;/&gt;</div>
-                <h3>Sistema de login</h3>
-                <p>Autenticación completa lista para Django.</p>
-                <div class="product-footer">
-                    <strong>$19.990</strong>
-                    <a href="#" class="btn btn-primary">Agregar</a>
-                </div>
-            </article>
-            <article class="product">
-                <div class="thumb">{ }</div>
-                <h3>Dashboard admin</h3>
-                <p>Panel moderno y responsivo con gráficos.</p>
-                <div class="product-footer">
-                    <strong>$29.990</strong>
-                    <a href="#" class="btn btn-primary">Agregar</a>
-                </div>
-            </article>
-            <article class="product">
-                <div class="thumb">&gt;_</div>
-                <h3>Bot de Discord</h3>
-                <p>Base modular con comandos y moderación.</p>
-                <div class="product-footer">
-                    <strong>$14.990</strong>
-                    <a href="#" class="btn btn-primary">Agregar</a>
-                </div>
-            </article>
+            {% for p in destacados %}
+                <article class="product">
+                    <div class="thumb">&lt;/&gt;</div>
+                    <h3>{{ p.nombre }}</h3>
+                    <p>{{ p.descripcion|truncatechars:80 }}</p>
+                    <div class="product-footer">
+                        <strong>${{ p.precio|floatformat:"0g" }}</strong>
+                        <a href="#" class="btn btn-primary">Agregar</a>
+                    </div>
+                </article>
+            {% empty %}
+                <p class="empty">Pronto habrá productos disponibles.</p>
+            {% endfor %}
         </div>
     </div>
 </section>

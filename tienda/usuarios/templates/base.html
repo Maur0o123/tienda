@@ -16,9 +16,12 @@
         <nav class="nav-links">
             <a href="{% url 'home' %}">Inicio</a>
             <a href="#">Productos</a>
-            <a href="#categorias">Categorías</a>
+            <a href="{% url 'home' %}#categorias">Categorías</a>
             <a href="#">Ofertas</a>
             <a href="#">Contacto</a>
+            {% if user.is_staff %}
+                <a href="{% url 'panel_productos' %}" class="nav-admin">Administración</a>
+            {% endif %}
         </nav>
 
         <form class="search" action="#" method="get">

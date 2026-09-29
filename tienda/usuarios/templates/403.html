@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Acceso denegado | CodeStore{% endblock %}
+
+{% block content %}
+<section class="auth">
+    <div class="auth-card center">
+        <h1>Acceso <span class="gradient">denegado</span></h1>
+        <p class="auth-sub">No tienes permisos para ver esta página.</p>
+        <a href="{% url 'home' %}" class="btn btn-primary">Volver al inicio</a>
+    </div>
+</section>
+{% endblock %}
