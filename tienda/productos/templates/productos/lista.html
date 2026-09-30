@@ -18,6 +18,7 @@
                         <th>Producto</th>
                         <th>Categoría</th>
                         <th>Precio</th>
+                        <th>Stock</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
@@ -30,6 +31,13 @@
                             <td>
                                 {% if p.en_oferta %}<s class="muted">${{ p.precio|floatformat:"0g" }}</s> {% endif %}
                                 ${{ p.precio_final|floatformat:"0g" }}
+                            </td>
+                            <td>
+                                {% if p.agotado %}
+                                    <span class="pill danger">Agotado</span>
+                                {% else %}
+                                    {{ p.stock }}
+                                {% endif %}
                             </td>
                             <td>
                                 {% if p.activo %}
@@ -47,7 +55,7 @@
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="5" class="empty-row">Aún no hay productos. Crea el primero.</td>
+                            <td colspan="6" class="empty-row">Aún no hay productos. Crea el primero.</td>
                         </tr>
                     {% endfor %}
                 </tbody>

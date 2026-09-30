@@ -27,6 +27,12 @@ class Producto(models.Model):
         blank=True,
         help_text='Déjalo vacío si no está en oferta.',
     )
+    ICONOS = {'python': '🐍', 'web': '🌐', 'bots': '🤖', 'ui': '🎨'}
+    stock = models.PositiveIntegerField(
+        'Stock',
+        default=10,
+        help_text='Unidades disponibles. Si queda en 0 se muestra como «Stock agotado».',
+    )
 
     class Meta:
         ordering = ['-creado']
@@ -47,3 +53,11 @@ class Producto(models.Model):
         if not self.en_oferta:
             return 0
         return round((1 - self.precio_oferta / self.precio) * 100)
+
+    @property
+    def icono(self):
+        return self.ICONOS.get(self.categoria, '📦')
+
+    @property
+    def agotado(self):
+        return self.stock == 0

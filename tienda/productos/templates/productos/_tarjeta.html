@@ -1,18 +1,32 @@
-<article class="product">
-    {% if p.en_oferta %}<span class="ribbon">-{{ p.descuento }}%</span>{% endif %}
-    <div class="thumb">&lt;/&gt;</div>
+<article class="product {% if p.agotado %}sold-out{% endif %}">
+    {% if p.agotado %}
+        <span class="ribbon ribbon-out">Stock agotado</span>
+    {% elif p.en_oferta %}
+        <span class="ribbon">-{{ p.descuento }}%</span>
+    {% endif %}
+
+    <div class="thumb">{{ p.icono }}</div>
     <span class="cat">{{ p.get_categoria_display }}</span>
     <h3>{{ p.nombre }}</h3>
     <p>{{ p.descripcion|truncatechars:80 }}</p>
+
     <div class="product-footer">
         <div class="price">
             {% if p.en_oferta %}<s>${{ p.precio|floatformat:"0g" }}</s>{% endif %}
             <strong>${{ p.precio_final|floatformat:"0g" }}</strong>
+            {% if not p.agotado and p.stock <= 5 %}
+                <small class="low">¡Quedan {{ p.stock }}!</small>
+            {% endif %}
         </div>
-        <form method="post" action="{% url 'carrito_agregar' p.pk %}">
-            {% csrf_token %}
-            <input type="hidden" name="next" value="{{ request.get_full_path }}">
-            <button type="submit" class="btn btn-primary">Agregar</button>
-        </form>
+
+        {% if p.agotado %}
+            <button type="button" class="btn btn-ghost" disabled>Agotado</button>
+        {% else %}
+            <form method="post" action="{% url 'carrito_agregar' p.pk %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                <button type="submit" class="btn btn-primary">Agregar</button>
+            </form>
+        {% endif %}
     </div>
 </article>

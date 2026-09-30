@@ -7,7 +7,7 @@
     <div class="container">
         <div class="panel-head">
             <h1>Tu <span class="gradient">carrito</span></h1>
-            {% if productos %}
+            {% if lineas %}
                 <form method="post" action="{% url 'carrito_vaciar' %}">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-danger btn-sm">Vaciar carrito</button>
@@ -15,31 +15,53 @@
             {% endif %}
         </div>
 
-        {% if productos %}
+        {% if lineas %}
             <div class="cart-layout">
                 <div class="cart-list">
-                    {% for p in productos %}
-                        <div class="cart-item">
-                            <div class="thumb">&lt;/&gt;</div>
-                            <div class="cart-info">
-                                <h3>{{ p.nombre }}</h3>
-                                <span class="muted">{{ p.get_categoria_display }}</span>
+                    {% for linea in lineas %}
+                        {% with p=linea.producto %}
+                            <div class="cart-item">
+                                <div class="thumb">{{ p.icono }}</div>
+
+                                <div class="cart-info">
+                                    <h3>{{ p.nombre }}</h3>
+                                    <span class="muted">
+                                        {% if p.en_oferta %}<s>${{ p.precio|floatformat:"0g" }}</s>{% endif %}
+                                        ${{ p.precio_final|floatformat:"0g" }} c/u
+                                    </span>
+                                    {% if linea.limite < max_cantidad %}
+                                        <small class="low">Solo quedan {{ p.stock }} disponibles</small>
+                                    {% endif %}
+                                </div>
+
+                                <div class="qty">
+                                    <form method="post" action="{% url 'carrito_restar' p.pk %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="qty-btn" aria-label="Quitar una unidad" {% if linea.cantidad <= 1 %}disabled{% endif %}>−</button>
+                                    </form>
+                                    <span class="qty-num">{{ linea.cantidad }}</span>
+                                    <form method="post" action="{% url 'carrito_sumar' p.pk %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="qty-btn" aria-label="Agregar una unidad" {% if linea.cantidad >= linea.limite %}disabled{% endif %}>+</button>
+                                    </form>
+                                </div>
+
+                                <div class="cart-subtotal">
+                                    <strong>${{ linea.subtotal|floatformat:"0g" }}</strong>
+                                </div>
+
+                                <form method="post" action="{% url 'carrito_quitar' p.pk %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-ghost btn-sm" aria-label="Quitar del carrito">✕</button>
+                                </form>
                             </div>
-                            <div class="cart-price">
-                                {% if p.en_oferta %}<s>${{ p.precio|floatformat:"0g" }}</s>{% endif %}
-                                <strong>${{ p.precio_final|floatformat:"0g" }}</strong>
-                            </div>
-                            <form method="post" action="{% url 'carrito_quitar' p.pk %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-ghost btn-sm" aria-label="Quitar">✕</button>
-                            </form>
-                        </div>
+                        {% endwith %}
                     {% endfor %}
                 </div>
 
                 <aside class="cart-summary">
                     <h3>Resumen</h3>
-                    <div class="row"><span>Productos</span><span>{{ productos|length }}</span></div>
+                    <div class="row"><span>Unidades</span><span>{{ unidades }}</span></div>
                     {% if ahorro %}
                         <div class="row"><span>Ahorro</span><span class="save">-${{ ahorro|floatformat:"0g" }}</span></div>
                     {% endif %}

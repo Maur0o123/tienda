@@ -7,7 +7,7 @@ from usuarios.mixins import AdminRequeridoMixin
 from .forms import ProductoForm
 from .models import Producto
 
-from django.db.models import Q, F
+from django.db.models import Case, F, IntegerField, Q, When
 from django.shortcuts import render
 
 
@@ -42,10 +42,34 @@ class ProductoEliminar(AdminRequeridoMixin, DeleteView):
         messages.success(self.request, 'Producto eliminado.')
         return super().form_valid(form)
 
-def catalogo(request, solo_ofertas=False):
-    productos = Producto.objects.filter(activo=True)
+def _entero(valor):
+    """Convierte a entero >= 0, o None si no es válido."""
+    try:
+        numero = int(valor)
+    except (TypeError, ValueError):
+        return None
+    if numero < 0:
+        return None
+    return min(numero, 2_000_000_000)
+
+
+def catalogo(request):
+    productos = Producto.objects.filter(activo=True).annotate(
+        precio_efectivo=Case(
+            When(precio_oferta__isnull=False, precio_oferta__lt=F('precio'), then=F('precio_oferta')),
+            default=F('precio'),
+            output_field=IntegerField(),
+        )
+    )
+
     q = request.GET.get('q', '').strip()
     categoria = request.GET.get('categoria', '')
+    minimo = _entero(request.GET.get('precio_min'))
+    maximo = _entero(request.GET.get('precio_max'))
+    solo_ofertas = request.GET.get('ofertas') == '1'
+
+    if minimo is not None and maximo is not None and minimo > maximo:
+        minimo, maximo = maximo, minimo
 
     if q:
         productos = productos.filter(Q(nombre__icontains=q) | Q(descripcion__icontains=q))
@@ -55,6 +79,11 @@ def catalogo(request, solo_ofertas=False):
     else:
         categoria = ''
 
+    if minimo is not None:
+        productos = productos.filter(precio_efectivo__gte=minimo)
+    if maximo is not None:
+        productos = productos.filter(precio_efectivo__lte=maximo)
+
     if solo_ofertas:
         productos = productos.filter(precio_oferta__isnull=False, precio_oferta__lt=F('precio'))
 
@@ -63,5 +92,8 @@ def catalogo(request, solo_ofertas=False):
         'q': q,
         'categoria': categoria,
         'categorias': Producto.CATEGORIAS,
+        'minimo': minimo,
+        'maximo': maximo,
         'solo_ofertas': solo_ofertas,
+        'hay_filtros': bool(q or categoria or minimo is not None or maximo is not None or solo_ofertas),
     })

@@ -1,37 +1,85 @@
 {% extends 'base.html' %}
 
-{% block title %}{% if solo_ofertas %}Ofertas{% else %}Productos{% endif %} | CodeStore{% endblock %}
+{% block title %}Productos | CodeStore{% endblock %}
 
 {% block content %}
-<section class="section">
+<section class="page-head">
     <div class="container">
-        <h1 class="section-title">
-            {% if solo_ofertas %}<span class="gradient">Ofertas</span>{% else %}Nuestros <span class="gradient">productos</span>{% endif %}
-        </h1>
+        <h1>Nuestros <span class="gradient">productos</span></h1>
+        <p>Código listo para usar. Filtra por categoría, precio u ofertas y encuentra lo que necesitas.</p>
+    </div>
+</section>
 
-        <form class="filters" method="get">
-            <input type="search" name="q" value="{{ q }}" placeholder="Buscar código, plantillas...">
-            <select name="categoria">
-                <option value="">Todas las categorías</option>
-                {% for valor, nombre in categorias %}
-                    <option value="{{ valor }}" {% if valor == categoria %}selected{% endif %}>{{ nombre }}</option>
+<section>
+    <div class="container shop">
+
+        <aside class="filters-col">
+            <form class="filters-card" method="get" action="{% url 'catalogo' %}">
+
+                <div class="filter-group">
+                    <span class="filter-title">Buscar</span>
+                    <input type="search" name="q" value="{{ q }}" placeholder="Nombre o descripción...">
+                </div>
+
+                <div class="filter-group">
+                    <span class="filter-title">Categoría</span>
+                    <div class="chips">
+                        <label class="chip">
+                            <input type="radio" name="categoria" value="" {% if not categoria %}checked{% endif %} onchange="this.form.submit()">
+                            <span>Todas</span>
+                        </label>
+                        {% for valor, nombre in categorias %}
+                            <label class="chip">
+                                <input type="radio" name="categoria" value="{{ valor }}" {% if valor == categoria %}checked{% endif %} onchange="this.form.submit()">
+                                <span>{{ nombre }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <span class="filter-title">Precio</span>
+                    <div class="price-row">
+                        <input type="number" name="precio_min" min="0" inputmode="numeric" placeholder="Mín." value="{{ minimo|default_if_none:'' }}">
+                        <span>—</span>
+                        <input type="number" name="precio_max" min="0" inputmode="numeric" placeholder="Máx." value="{{ maximo|default_if_none:'' }}">
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <span class="filter-title">Ofertas</span>
+                    <label class="switch">
+                        <input type="checkbox" name="ofertas" value="1" {% if solo_ofertas %}checked{% endif %} onchange="this.form.submit()">
+                        <span class="slider"></span>
+                        <span class="switch-text">Solo ofertas</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">Aplicar filtros</button>
+                {% if hay_filtros %}
+                    <a href="{% url 'catalogo' %}" class="btn btn-ghost btn-block">Limpiar filtros</a>
+                {% endif %}
+            </form>
+        </aside>
+
+        <div>
+            <div class="shop-top">
+                <span>{{ productos|length }} producto{{ productos|length|pluralize }}</span>
+            </div>
+
+            <div class="shop-grid">
+                {% for p in productos %}
+                    {% include 'productos/_tarjeta.html' %}
+                {% empty %}
+                    <div class="cart-empty shop-empty">
+                        <h2>🔍 Sin resultados</h2>
+                        <p>No encontramos productos con esos filtros.</p>
+                        <a href="{% url 'catalogo' %}" class="btn btn-primary">Ver todos</a>
+                    </div>
                 {% endfor %}
-            </select>
-            <button type="submit" class="btn btn-primary">Filtrar</button>
-            {% if q or categoria %}
-                <a href="{% url request.resolver_match.url_name %}" class="btn btn-ghost">Limpiar</a>
-            {% endif %}
-        </form>
-
-        <p class="results">{{ productos|length }} resultado{{ productos|length|pluralize }}</p>
-
-        <div class="grid-3">
-            {% for p in productos %}
-                {% include 'productos/_tarjeta.html' %}
-            {% empty %}
-                <p class="empty">No encontramos productos con esos filtros.</p>
-            {% endfor %}
+            </div>
         </div>
+
     </div>
 </section>
 {% endblock %}
