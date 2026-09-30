@@ -1,18 +1,14 @@
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
+from usuarios.mixins import AdminRequeridoMixin
 from .forms import ProductoForm
 from .models import Producto
 
-
-class AdminRequeridoMixin(LoginRequiredMixin, UserPassesTestMixin):
-    """Sin sesión -> login. Con sesión pero sin ser admin -> 403."""
-
-    def test_func(self):
-        return self.request.user.is_staff
+from django.db.models import Q, F
+from django.shortcuts import render
 
 
 class ProductoLista(AdminRequeridoMixin, ListView):
@@ -45,3 +41,27 @@ class ProductoEliminar(AdminRequeridoMixin, DeleteView):
     def form_valid(self, form):
         messages.success(self.request, 'Producto eliminado.')
         return super().form_valid(form)
+
+def catalogo(request, solo_ofertas=False):
+    productos = Producto.objects.filter(activo=True)
+    q = request.GET.get('q', '').strip()
+    categoria = request.GET.get('categoria', '')
+
+    if q:
+        productos = productos.filter(Q(nombre__icontains=q) | Q(descripcion__icontains=q))
+
+    if categoria in dict(Producto.CATEGORIAS):
+        productos = productos.filter(categoria=categoria)
+    else:
+        categoria = ''
+
+    if solo_ofertas:
+        productos = productos.filter(precio_oferta__isnull=False, precio_oferta__lt=F('precio'))
+
+    return render(request, 'productos/catalogo.html', {
+        'productos': productos,
+        'q': q,
+        'categoria': categoria,
+        'categorias': Producto.CATEGORIAS,
+        'solo_ofertas': solo_ofertas,
+    })

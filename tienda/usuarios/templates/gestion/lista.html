@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Usuarios | Administración{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <div class="container">
+        {% include 'panel_tabs.html' with activo='usuarios' %}
+
+        <div class="panel-head">
+            <h1>Gestión de <span class="gradient">usuarios</span></h1>
+            <form class="panel-search" method="get">
+                <input type="search" name="q" value="{{ q }}" placeholder="Buscar por usuario, nombre o correo...">
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </form>
+        </div>
+
+        <div class="table-wrap">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Correo</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Registro</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in usuarios %}
+                        <tr>
+                            <td>
+                                {{ u.username }}
+                                {% if u.get_full_name %}<br><small class="muted">{{ u.get_full_name }}</small>{% endif %}
+                            </td>
+                            <td>{{ u.email|default:"—" }}</td>
+                            <td>
+                                {% if u.is_superuser %}
+                                    <span class="pill admin">Superadmin</span>
+                                {% elif u.is_staff %}
+                                    <span class="pill admin">Administrador</span>
+                                {% else %}
+                                    <span class="pill off">Cliente</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if u.is_active %}
+                                    <span class="pill on">Activo</span>
+                                {% else %}
+                                    <span class="pill danger">Inactivo</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ u.date_joined|date:"d/m/Y" }}</td>
+                            <td>
+                                {% if u == request.user %}
+                                    <span class="pill you">Tú</span>
+                                {% elif u.is_superuser and not request.user.is_superuser %}
+                                    <span class="muted">—</span>
+                                {% else %}
+                                    <div class="actions">
+                                        <a href="{% url 'usuario_editar' u.pk %}" class="btn btn-ghost btn-sm">Editar</a>
+                                        <a href="{% url 'usuario_eliminar' u.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+                                    </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="empty-row">No se encontraron usuarios.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

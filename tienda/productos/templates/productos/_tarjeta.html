@@ -1,0 +1,18 @@
+<article class="product">
+    {% if p.en_oferta %}<span class="ribbon">-{{ p.descuento }}%</span>{% endif %}
+    <div class="thumb">&lt;/&gt;</div>
+    <span class="cat">{{ p.get_categoria_display }}</span>
+    <h3>{{ p.nombre }}</h3>
+    <p>{{ p.descripcion|truncatechars:80 }}</p>
+    <div class="product-footer">
+        <div class="price">
+            {% if p.en_oferta %}<s>${{ p.precio|floatformat:"0g" }}</s>{% endif %}
+            <strong>${{ p.precio_final|floatformat:"0g" }}</strong>
+        </div>
+        <form method="post" action="{% url 'carrito_agregar' p.pk %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <button type="submit" class="btn btn-primary">Agregar</button>
+        </form>
+    </div>
+</article>

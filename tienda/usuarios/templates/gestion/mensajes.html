@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Mensajes | Administración{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <div class="container">
+        {% include 'panel_tabs.html' with activo='mensajes' %}
+
+        <div class="panel-head">
+            <h1>Mensajes de <span class="gradient">contacto</span></h1>
+        </div>
+
+        {% for m in mensajes %}
+            <article class="msg">
+                <div class="msg-head">
+                    <div>
+                        <strong>{{ m.asunto }}</strong><br>
+                        <span class="muted">{{ m.nombre }} · {{ m.email }} · {{ m.creado|date:"d/m/Y H:i" }}</span>
+                    </div>
+                    <div class="actions">
+                        <a href="mailto:{{ m.email }}?subject=Re:%20{{ m.asunto|urlencode }}" class="btn btn-ghost btn-sm">Responder</a>
+                        <form method="post" action="{% url 'mensaje_eliminar' m.pk %}" onsubmit="return confirm('¿Eliminar este mensaje?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                        </form>
+                    </div>
+                </div>
+                <p>{{ m.mensaje|linebreaksbr }}</p>
+            </article>
+        {% empty %}
+            <p class="empty">Aún no hay mensajes.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

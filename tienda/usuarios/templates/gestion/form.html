@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar usuario | Administración{% endblock %}
+
+{% block content %}
+<section class="auth">
+    <div class="auth-card">
+        <h1>Editar <span class="gradient">usuario</span></h1>
+        <p class="auth-sub">Registrado el {{ object.date_joined|date:"d/m/Y" }}</p>
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div class="field">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <div class="help">{{ field.help_text|safe }}</div>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <small class="error">{{ error }}</small>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Guardar cambios</button>
+        </form>
+
+        <p class="auth-alt"><a href="{% url 'panel_usuarios' %}">← Volver a usuarios</a></p>
+    </div>
+</section>
+{% endblock %}

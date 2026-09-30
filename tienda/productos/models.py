@@ -21,9 +21,29 @@ class Producto(models.Model):
         help_text='Si lo desmarcas, no se mostrará en la tienda.',
     )
     creado = models.DateTimeField(auto_now_add=True)
+    precio_oferta = models.PositiveIntegerField(
+        'Precio de oferta',
+        null=True,
+        blank=True,
+        help_text='Déjalo vacío si no está en oferta.',
+    )
 
     class Meta:
         ordering = ['-creado']
 
     def __str__(self):
         return self.nombre
+
+    @property
+    def en_oferta(self):
+        return self.precio_oferta is not None and self.precio_oferta < self.precio
+
+    @property
+    def precio_final(self):
+        return self.precio_oferta if self.en_oferta else self.precio
+
+    @property
+    def descuento(self):
+        if not self.en_oferta:
+            return 0
+        return round((1 - self.precio_oferta / self.precio) * 100)

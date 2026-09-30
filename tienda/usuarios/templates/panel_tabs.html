@@ -1,0 +1,5 @@
+<nav class="panel-tabs">
+    <a href="{% url 'panel_productos' %}" class="{% if activo == 'productos' %}active{% endif %}">Productos</a>
+    <a href="{% url 'panel_usuarios' %}" class="{% if activo == 'usuarios' %}active{% endif %}">Usuarios</a>
+    <a href="{% url 'panel_mensajes' %}" class="{% if activo == 'mensajes' %}active{% endif %}">Mensajes</a>
+</nav>

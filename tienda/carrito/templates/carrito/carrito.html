@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Carrito | CodeStore{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <div class="container">
+        <div class="panel-head">
+            <h1>Tu <span class="gradient">carrito</span></h1>
+            {% if productos %}
+                <form method="post" action="{% url 'carrito_vaciar' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">Vaciar carrito</button>
+                </form>
+            {% endif %}
+        </div>
+
+        {% if productos %}
+            <div class="cart-layout">
+                <div class="cart-list">
+                    {% for p in productos %}
+                        <div class="cart-item">
+                            <div class="thumb">&lt;/&gt;</div>
+                            <div class="cart-info">
+                                <h3>{{ p.nombre }}</h3>
+                                <span class="muted">{{ p.get_categoria_display }}</span>
+                            </div>
+                            <div class="cart-price">
+                                {% if p.en_oferta %}<s>${{ p.precio|floatformat:"0g" }}</s>{% endif %}
+                                <strong>${{ p.precio_final|floatformat:"0g" }}</strong>
+                            </div>
+                            <form method="post" action="{% url 'carrito_quitar' p.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-ghost btn-sm" aria-label="Quitar">✕</button>
+                            </form>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <aside class="cart-summary">
+                    <h3>Resumen</h3>
+                    <div class="row"><span>Productos</span><span>{{ productos|length }}</span></div>
+                    {% if ahorro %}
+                        <div class="row"><span>Ahorro</span><span class="save">-${{ ahorro|floatformat:"0g" }}</span></div>
+                    {% endif %}
+                    <div class="row total"><span>Total</span><strong>${{ total|floatformat:"0g" }}</strong></div>
+                    <a href="{% url 'catalogo' %}" class="btn btn-ghost btn-block">Seguir comprando</a>
+                </aside>
+            </div>
+        {% else %}
+            <div class="cart-empty">
+                <h2>Tu carrito está vacío</h2>
+                <p>Explora el catálogo y agrega lo que te guste.</p>
+                <a href="{% url 'catalogo' %}" class="btn btn-primary btn-lg">Ver productos</a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

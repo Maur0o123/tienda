@@ -5,6 +5,7 @@
 {% block content %}
 <section class="panel">
     <div class="container">
+    {% include 'panel_tabs.html' with activo='productos' %}
         <div class="panel-head">
             <h1>Panel de <span class="gradient">administración</span></h1>
             <a href="{% url 'producto_crear' %}" class="btn btn-primary">+ Nuevo producto</a>
@@ -26,7 +27,10 @@
                         <tr>
                             <td>{{ p.nombre }}</td>
                             <td>{{ p.get_categoria_display }}</td>
-                            <td>${{ p.precio|floatformat:"0g" }}</td>
+                            <td>
+                                {% if p.en_oferta %}<s class="muted">${{ p.precio|floatformat:"0g" }}</s> {% endif %}
+                                ${{ p.precio_final|floatformat:"0g" }}
+                            </td>
                             <td>
                                 {% if p.activo %}
                                     <span class="pill on">Publicado</span>

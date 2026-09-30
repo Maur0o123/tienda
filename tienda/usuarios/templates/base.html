@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}CodeStore{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'usuarios/css/style.css' %}?v=2">
+    <link rel="stylesheet" href="{% static 'usuarios/css/style.css' %}?v=5">
 </head>
 <body>
 
@@ -15,21 +15,21 @@
 
         <nav class="nav-links">
             <a href="{% url 'home' %}">Inicio</a>
-            <a href="#">Productos</a>
+            <a href="{% url 'catalogo' %}">Productos</a>
             <a href="{% url 'home' %}#categorias">Categorías</a>
-            <a href="#">Ofertas</a>
-            <a href="#">Contacto</a>
+            <a href="{% url 'ofertas' %}">Ofertas</a>
+            <a href="{% url 'contacto' %}">Contacto</a>
             {% if user.is_staff %}
                 <a href="{% url 'panel_productos' %}" class="nav-admin">Administración</a>
             {% endif %}
         </nav>
 
-        <form class="search" action="#" method="get">
+        <form class="search" action="{% url 'catalogo' %}" method="get">
             <input type="search" name="q" placeholder="Buscar código, plantillas...">
         </form>
 
         <div class="nav-actions">
-            <a href="#" class="cart" aria-label="Carrito">🛒<span class="badge">0</span></a>
+            <a href="{% url 'carrito' %}" class="cart" aria-label="Carrito">🛒{% if carrito_cantidad %}<span class="badge">{{ carrito_cantidad }}</span>{% endif %}</a>
 
             {% if user.is_authenticated %}
                 <a href="{% url 'perfil' %}" class="user">{{ user.username }}</a>
@@ -54,9 +54,9 @@
         <a href="{% url 'home' %}" class="logo">&lt;/&gt; Code<span>Store</span></a>
         <p>© 2026 CodeStore. Hecho con Django.</p>
         <div class="footer-links">
-            <a href="#">Términos</a>
-            <a href="#">Privacidad</a>
-            <a href="#">Contacto</a>
+            <a href="{% url 'terminos' %}">Términos</a>
+            <a href="{% url 'privacidad' %}">Privacidad</a>
+            <a href="{% url 'contacto' %}">Contacto</a>
         </div>
     </div>
 </footer>

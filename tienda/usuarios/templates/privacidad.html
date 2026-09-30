@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Política de privacidad | CodeStore{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container legal">
+        <h1>Política de <span class="gradient">privacidad</span></h1>
+
+        <h2>Datos que recopilamos</h2>
+        <ul>
+            <li>Datos de tu cuenta: nombre de usuario, nombre, apellido y correo.</li>
+            <li>Los mensajes que nos envías desde el formulario de contacto.</li>
+            <li>Tu carrito de compras, que se guarda en tu sesión.</li>
+        </ul>
+
+        <h2>Cómo los usamos</h2>
+        <p>Usamos tus datos solo para gestionar tu cuenta, responder tus mensajes y procesar tus compras. No los vendemos a terceros.</p>
+
+        <h2>Cookies</h2>
+        <p>Usamos cookies técnicas necesarias para mantener tu sesión iniciada y proteger los formularios. No usamos cookies de publicidad.</p>
+
+        <h2>Seguridad</h2>
+        <p>Las contraseñas se almacenan cifradas y nunca podemos verlas.</p>
+
+        <h2>Tus derechos</h2>
+        <p>Puedes editar tus datos desde tu perfil o pedir que los eliminemos escribiéndonos por el formulario de <a href="{% url 'contacto' %}">contacto</a>.</p>
+    </div>
+</section>
+{% endblock %}

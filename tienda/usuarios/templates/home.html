@@ -11,7 +11,7 @@
             <h1>Código limpio,<br><span class="gradient">listo para usar.</span></h1>
             <p>Scripts, plantillas y componentes para acelerar tus proyectos. Compra una vez, úsalo siempre.</p>
             <div class="hero-buttons">
-                <a href="#" class="btn btn-primary btn-lg">Ver productos</a>
+                <a href="{% url 'catalogo' %}" class="btn btn-primary btn-lg">Ver productos</a>
                 <a href="#destacados" class="btn btn-ghost btn-lg">Destacados</a>
             </div>
         </div>
@@ -53,10 +53,10 @@ app.<span class="f">ejecutar</span>()
     <div class="container">
         <h2 class="section-title">Explora por <span class="gradient">categoría</span></h2>
         <div class="grid-4">
-            <a href="#" class="category">🐍 <span>Python</span></a>
-            <a href="#" class="category">🌐 <span>Web</span></a>
-            <a href="#" class="category">🤖 <span>Bots</span></a>
-            <a href="#" class="category">🎨 <span>Plantillas UI</span></a>
+            <a href="{% url 'catalogo' %}?categoria=python" class="category">🐍 <span>Python</span></a>
+            <a href="{% url 'catalogo' %}?categoria=web" class="category">🌐 <span>Web</span></a>
+            <a href="{% url 'catalogo' %}?categoria=bots" class="category">🤖 <span>Bots</span></a>
+            <a href="{% url 'catalogo' %}?categoria=ui" class="category">🎨 <span>Plantillas UI</span></a>
         </div>
     </div>
 </section>
@@ -66,19 +66,12 @@ app.<span class="f">ejecutar</span>()
         <h2 class="section-title">Productos <span class="gradient">destacados</span></h2>
         <div class="grid-3">
             {% for p in destacados %}
-                <article class="product">
-                    <div class="thumb">&lt;/&gt;</div>
-                    <h3>{{ p.nombre }}</h3>
-                    <p>{{ p.descripcion|truncatechars:80 }}</p>
-                    <div class="product-footer">
-                        <strong>${{ p.precio|floatformat:"0g" }}</strong>
-                        <a href="#" class="btn btn-primary">Agregar</a>
-                    </div>
-                </article>
+                {% include 'productos/_tarjeta.html' %}
             {% empty %}
                 <p class="empty">Pronto habrá productos disponibles.</p>
             {% endfor %}
         </div>
+        <a href="{% url 'catalogo' %}" class="link-more">Ver todos los productos →</a>
     </div>
 </section>
 
@@ -89,7 +82,7 @@ app.<span class="f">ejecutar</span>()
         {% if not user.is_authenticated %}
             <a href="{% url 'register' %}" class="btn btn-light btn-lg">Crear cuenta</a>
         {% else %}
-            <a href="#" class="btn btn-light btn-lg">Ver catálogo</a>
+            <a href="{% url 'catalogo' %}" class="btn btn-light btn-lg">Ver catálogo</a>
         {% endif %}
     </div>
 </section>
