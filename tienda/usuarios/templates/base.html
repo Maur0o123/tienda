@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}CodeStore{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'usuarios/css/style.css' %}?v=8">
+    <script>document.documentElement.classList.add('js');</script>
+    <link rel="stylesheet" href="{% static 'usuarios/css/style.css' %}?v=10">
 </head>
 <body>
 
@@ -80,6 +81,34 @@
         toast.querySelector('.toast-close').addEventListener('click', cerrar);
         setTimeout(cerrar, 4000);
     });
+</script>
+
+<script>
+    (function () {
+        var objetivos = document.querySelectorAll('[data-reveal], [data-stagger] > *');
+
+        if (!('IntersectionObserver' in window)) {
+            objetivos.forEach(function (el) { el.classList.add('is-visible'); });
+            return;
+        }
+
+        document.querySelectorAll('[data-stagger]').forEach(function (grupo) {
+            Array.prototype.forEach.call(grupo.children, function (hijo, i) {
+                hijo.style.setProperty('--delay', (Math.min(i, 5) * 0.12) + 's');
+            });
+        });
+
+        var observador = new IntersectionObserver(function (entradas) {
+            entradas.forEach(function (entrada) {
+                if (entrada.isIntersecting) {
+                    entrada.target.classList.add('is-visible');
+                    observador.unobserve(entrada.target);
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+        objetivos.forEach(function (el) { observador.observe(el); });
+    })();
 </script>
 
 </body>

@@ -6,7 +6,7 @@
 
 <section class="hero">
     <div class="container hero-inner">
-        <div class="hero-text">
+        <div class="hero-text" data-stagger>
             <span class="tag">Nuevo · Plantillas y scripts</span>
             <h1>Código limpio,<br><span class="gradient">listo para usar.</span></h1>
             <p>Scripts, plantillas y componentes para acelerar tus proyectos. Compra una vez, úsalo siempre.</p>
@@ -16,7 +16,7 @@
             </div>
         </div>
 
-        <div class="code-window">
+        <div class="code-window" data-reveal="right">
             <div class="code-bar"><i></i><i></i><i></i></div>
 <pre><code><span class="c"># tu próximo proyecto</span>
 <span class="k">from</span> codestore <span class="k">import</span> producto
@@ -30,7 +30,7 @@ app.<span class="f">ejecutar</span>()
 </section>
 
 <section class="section">
-    <div class="container grid-3">
+    <div class="container grid-3" data-stagger>
         <div class="card">
             <div class="icon">⚡</div>
             <h3>Entrega inmediata</h3>
@@ -51,8 +51,8 @@ app.<span class="f">ejecutar</span>()
 
 <section class="section" id="categorias">
     <div class="container">
-        <h2 class="section-title">Explora por <span class="gradient">categoría</span></h2>
-        <div class="grid-4">
+        <h2 class="section-title" data-reveal>Explora por <span class="gradient">categoría</span></h2>
+        <div class="grid-4" data-stagger>
             <div class="category">🐍 <span>Python</span></div>
             <div class="category">🌐 <span>Web</span></div>
             <div class="category">🤖 <span>Bots</span></div>
@@ -63,20 +63,22 @@ app.<span class="f">ejecutar</span>()
 
 <section class="section" id="destacados">
     <div class="container">
-        <h2 class="section-title">Productos <span class="gradient">destacados</span></h2>
-        <div class="grid-3">
+        <h2 class="section-title" data-reveal>Productos <span class="gradient">destacados</span></h2>
+
+        <div class="grid-3" data-stagger>
             {% for p in destacados %}
                 {% include 'productos/_tarjeta.html' %}
             {% empty %}
                 <p class="empty">Pronto habrá productos disponibles.</p>
             {% endfor %}
         </div>
-        <a href="{% url 'catalogo' %}" class="link-more">Ver todos los productos →</a>
+
+        <a href="{% url 'catalogo' %}" class="link-more" data-reveal>Ver todos los productos →</a>
     </div>
 </section>
 
 <section class="section">
-    <div class="container cta">
+    <div class="container cta" data-reveal="zoom">
         <h2>¿Listo para empezar?</h2>
         <p>Crea tu cuenta gratis y descubre todo el catálogo.</p>
         {% if not user.is_authenticated %}
